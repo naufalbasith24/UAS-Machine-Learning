@@ -1,25 +1,58 @@
-1) Tujuan & algoritma (beserta alasannya)
+# Forest Fires ML Project
 
-Tujuan utama:
+This repository analyzes the **forestfires.csv** dataset and provides two tasks:
+1. **Regression**: predict `log1p(area)` (stabilizes variance for skewed target).
+2. **Classification**: predict `fire_occurred` (whether any area burned).
 
-Regresi: memprediksi besarnya area terbakar (area). Karena distribusinya sangat skewed dan banyak nol, target dipakai log1p(area) agar error lebih stabil dan tidak didominasi outlier.
+## Why these targets & algorithms?
+- **log1p(area)** makes errors more proportional and reduces the impact of extreme outliers.
+- **Random Forests** handle non-linearities, interactions, and mixed feature types well with minimal tuning.
+- Baselines and metrics are saved for transparency.
 
-Klasifikasi: memprediksi apakah terjadi kebakaran sama sekali (fire_occurred = area > 0). Ini menjawab pertanyaan biner: ada/tidak ada area terbakar.
+## Folder Structure
+```
+forestfires-ml-project/
+├── data/
+│   └── forestfires.csv
+├── scripts/
+│   └── forestfires_ml.py
+└── outputs/
+    ├── eda_summary.json
+    ├── regression_metrics.json
+    ├── classification_metrics.json
+    ├── report.txt
+    └── plots/
+        ├── area_hist.png
+        ├── log_area_hist.png
+        └── confusion_matrix.png
+```
 
-Algoritma yang digunakan & alasan:
+## How to run locally
+```bash
+pip install -r requirements.txt
+python scripts/forestfires_ml.py
+```
 
-Random Forest Regressor (untuk log1p(area)): kuat untuk relasi non-linear, tahan terhadap outlier, bekerja baik pada campuran fitur numerik & kategorikal, dan minim tuning.
+## Quick EDA
+- Shape, columns, dtypes, and null counts are saved in `outputs/eda_summary.json`.
 
-Random Forest Classifier (untuk fire_occurred): alasan sama seperti di atas; juga bagus untuk ketidakseimbangan moderat karena sifat bagging.
+## Metrics
+- **Regression**: RMSE (log-scale), R², baseline RMSE (mean-predictor).
+- **Classification**: Accuracy, Precision, Recall, F1, Confusion Matrix.
 
-Pra-proses:
+## Push to GitHub
+1. Create a new GitHub repo (empty).
+2. In a terminal:
+```bash
+cd forestfires-ml-project
+git init
+git add .
+git commit -m "Initial commit: forest fires EDA + models"
+git branch -M main
+git remote add origin https://github.com/<USERNAME>/<REPO>.git
+git push -u origin main
+```
+3. Add a link to the repo in your report if needed.
 
-Fitur numerik → StandardScaler.
-
-Fitur kategorikal (month, day) → OneHotEncoder.
-
-Evaluasi:
-
-Regresi → RMSE (skala log), R², dan baseline RMSE (prediksi rata-rata) untuk pembanding.
-
-Klasifikasi → Accuracy, Precision, Recall, F1, serta Confusion Matrix.
+## Notes
+- If your dataset columns differ from UCI names, adjust `numeric_cols`/`categorical_cols` in the script.
